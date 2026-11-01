@@ -1,0 +1,25 @@
+# Залежності
+node_modules/
+package-lock.json
+
+# Логи
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Системні файли ОС
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Тимчасові файли та кеші редакторів
+*.tmp
+*.temp
+*.swp
+*~
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
