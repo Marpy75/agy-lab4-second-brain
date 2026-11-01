@@ -526,6 +526,36 @@ async function getSummary() {
   return { counts, tags };
 }
 
+/**
+ * Виділення всіх [[посилань]] (Wikilinks) із тексту
+ */
+function extractWikilinks(text) {
+  if (!text) return [];
+  const matches = [];
+  const regex = /\[\[(.*?)\]\]/g;
+  let match;
+  while ((match = regex.exec(text)) !== null) {
+    const clean = match[1].trim();
+    if (clean && !matches.includes(clean)) {
+      matches.push(clean);
+    }
+  }
+  return matches;
+}
+
+/**
+ * Власне надійне екранування HTML-сутностей для захисту від XSS (<script>, атрибути тощо)
+ */
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 module.exports = {
   NOTES_ROOT,
   ALLOWED_CATEGORIES,
@@ -538,5 +568,7 @@ module.exports = {
   createNote,
   updateNote,
   archiveNote,
-  getSummary
+  getSummary,
+  extractWikilinks,
+  escapeHtml
 };
