@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Second Brain — Навчальні нотатки</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">🧠</div>
+        <div>
+          <h1>Second Brain</h1>
+          <p class="subtitle">База навчальних знань та конспектів</p>
+        </div>
+      </div>
+      <div class="stats-badge" id="statsBadge">
+        <span class="stats-count" id="notesCount">0</span>
+        <span class="stats-label">нотаток</span>
+      </div>
+    </header>
+
+    <!-- Main Content Layout -->
+    <main class="main-layout">
+      <!-- Left Column: Note Creation Form -->
+      <section class="form-section card">
+        <div class="card-header">
+          <h2>Створити нотатку</h2>
+          <p class="section-desc">Додайте нову тему, конспект чи важливу думку</p>
+        </div>
+
+        <form id="noteForm" novalidate>
+          <div class="form-group">
+            <label for="noteTitle">Заголовок <span class="required">*</span></label>
+            <input 
+              type="text" 
+              id="noteTitle" 
+              name="title" 
+              placeholder="Наприклад: Архітектура конвеєра процесора" 
+              required
+              maxlength="120"
+            />
+            <span class="error-msg" id="titleError">Будь ласка, вкажіть заголовок нотатки</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="noteSubject">Предмет / Дисципліна <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="noteSubject" 
+                name="subject" 
+                list="subjectsList" 
+                placeholder="Наприклад: АСКС" 
+                required
+                maxlength="50"
+              />
+              <datalist id="subjectsList">
+                <option value="АСКС"></option>
+                <option value="Архітектура комп'ютерів"></option>
+                <option value="Операційні системи"></option>
+                <option value="Комп'ютерні мережі"></option>
+                <option value="Бази даних"></option>
+                <option value="Штучний інтелект"></option>
+              </datalist>
+              <span class="error-msg" id="subjectError">Вкажіть предмет або навчальну дисципліну</span>
+            </div>
+
+            <div class="form-group">
+              <label for="noteTags">Теги <span class="hint">(через кому)</span></label>
+              <input 
+                type="text" 
+                id="noteTags" 
+                name="tags" 
+                placeholder="конвеєр, RISC-V, екзамен" 
+                maxlength="80"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="noteContent">Зміст нотатки <span class="required">*</span></label>
+            <textarea 
+              id="noteContent" 
+              name="content" 
+              rows="6" 
+              placeholder="Короткий зміст, формули, ключові пункти або висновки..."
+              required
+            ></textarea>
+            <span class="error-msg" id="contentError">Зміст нотатки не може бути порожнім</span>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="submitBtn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Зберегти нотатку
+            </button>
+            <button type="button" class="btn btn-secondary" id="resetBtn">Очистити</button>
+          </div>
+          <div class="feedback-alert" id="feedbackAlert" role="alert" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <!-- Right Column: Notes List -->
+      <section class="notes-section">
+        <div class="notes-toolbar card">
+          <div class="search-box">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input 
+              type="text" 
+              id="searchInput" 
+              placeholder="Пошук за заголовком, текстом чи тегами..." 
+            />
+          </div>
+
+          <div class="filter-box">
+            <select id="subjectFilter">
+              <option value="all">Усі предмети</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="notes-list-header">
+          <h3>Збережені нотатки</h3>
+          <span class="filtered-count" id="filteredCount">Показано: 0</span>
+        </div>
+
+        <!-- Notes Container -->
+        <div class="notes-grid" id="notesGrid">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state card" id="emptyState" style="display: none;">
+          <div class="empty-icon">📝</div>
+          <h3>Нотаток поки немає</h3>
+          <p>Заповніть форму зліва, щоб додати свою першу навчальну нотатку до вашого Second Brain.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>Лабораторна робота №4 • Архітектура спеціалізованих комп'ютерних систем (АСКС) • Дані зберігаються в LocalStorage</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
